@@ -1,7 +1,9 @@
 pragma solidity ^0.5.0;
 
 /**
-* This contract manages all transactions between buyers and sellers in the
+* @author Karen Suen
+* @title A contract for managing trading of funds between buyers and sellers
+* @notice This contract manages all transactions between buyers and sellers in the
 * marketplace. When a buyer commits to purchasing a listing, a new transaction
 * is created and buyer's purchase funds are held in this Escrow contract until
 * the buyer confirms successfully delivery of the item from seller.
@@ -74,8 +76,7 @@ contract Escrow {
 
     /**
     * @dev Receives and holds buyer's funds for purchasing a listing and updates
-    * the state of the corresponding transaction. The funds will only be accepted
-    * in escrow if the correct amount was sent.
+    * the state of the corresponding transaction.
     * @param _id The transaction (listing) id to fund
     * @param _buyer The buyer address that is sending the funds
     */
@@ -85,11 +86,6 @@ contract Escrow {
         isAwaitingPayment(_id)
         buyerOnly(_id, _buyer)
     {
-        // check the buyer sent correct amount to purchase listing
-        require(
-            msg.value == transactions[_id].amount,
-            "Not enough funds sent, funds returned to account"
-        );
         transactions[_id].status = Status.AWAITING_DELIVERY;
     }
 
