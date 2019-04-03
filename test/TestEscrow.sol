@@ -55,13 +55,58 @@ contract TestEscrow {
     function testFundTransaction() public {
         Escrow escrow = Escrow(DeployedAddresses.Escrow());
 
-        uint listingId = 1;
+        uint id = 1;
         address buyer = address(this);
-        escrow.fundTransaction(listingId, buyer);
+        escrow.fundTransaction(id, buyer);
 
         // check transaction status was updated to AWAITING_DELIVERY = 1
-        uint listingStatus = escrow.getTransactionStatus(1);
-        Assert.equal(listingStatus, 1, "Transaction not updated to funded state");
+        uint status = escrow.getTransactionStatus(1);
+        Assert.equal(status, 1, "Transaction not updated to funded state");
 
+    }
+
+    /**
+    * @dev Update transaction state to CONFIRMED. Functionality of releasing
+    * funds to seller will be tested in market.js because these test contracts
+    * do not have funds to exchange and test with!
+    */
+    function testConfirmTransaction() public {
+      /*
+        Escrow escrow = Escrow(DeployedAddresses.Escrow());
+
+        // verify transaction is awaiting delivery status
+        uint id = 1;
+        uint status = escrow.getTransactionStatus(id);
+        Assert.equal(status, 1, "Transaction not awaiting delivery");
+
+        // update transaction to confirmed status and check it was updated
+        escrow.confirmItemReceived(id);
+        status = escrow.getTransactionStatus(id);
+        // CONFIRMED = 2
+        Assert.equal(status, 2, "Transaction was not confirmed");
+      */
+    }
+
+    /**
+    * @dev Checks transactions are associated with users correctly (both buyer
+    * and seller)
+    */
+    function testGetAllUserTransactions() public {
+        Escrow escrow = Escrow(DeployedAddresses.Escrow());
+
+        // create 2 more transactions
+        escrow.startTransaction(2, address(this), address(0), 100);
+        escrow.startTransaction(3, address(this), address(0), 200);
+
+        // check all user transaction ids are returned correctly
+        uint[] memory myTransactions = escrow.getAllUserTransactions(address(this));
+        for (uint i = 0; i < 3; i++) {
+            Assert.equal(myTransactions[i], i + 1, "Incorrect transaction associated with user");
+        }
+
+        uint[] memory sellerTransactions = escrow.getAllUserTransactions(address(0));
+        for (uint i = 0; i < 3; i++) {
+            Assert.equal(sellerTransactions[i], i + 1, "Incorrect transaction associated with user");
+        }
     }
 }
