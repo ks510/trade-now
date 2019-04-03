@@ -112,14 +112,6 @@ contract MarketStore {
     }
 
     /**
-    * @dev Returns the current state of a listing as an integer
-    * @param _id The id of listing to retrieve the state of
-    */
-    function getListingState(uint _id) public view returns (uint) {
-        return uint256(listings[_id].state);
-    }
-
-    /**
     * @notice Returns all information about a listing in the marketplace as a tuple
     * @dev The listing state enum value is returned as an integer
     * @param _id The id of listing to return
@@ -152,5 +144,33 @@ contract MarketStore {
     */
     function getAllSellerListings(address _seller) public view returns (uint[] memory) {
         return allUserListings[_seller];
+    }
+
+    function getListingPrice(uint _listingId) public view returns (uint) {
+      return listings[_listingId].price;
+    }
+
+    function getListingTitle(uint _listingId) public view returns (string memory) {
+      return listings[_listingId].title;
+    }
+
+    function getListingDescription(uint _listingId) public view returns (string memory) {
+      return listings[_listingId].description;
+    }
+
+    function getListingImage(uint _listingId) public view returns (string memory) {
+      return listings[_listingId].imageHash;
+    }
+
+    function getListingPrice(uint _listingId) public view returns (address) {
+      return listings[_listingId].seller;
+    }
+
+    /**
+    * @dev Returns the current state of a listing as an integer
+    * @param _id The id of listing to retrieve the state of
+    */
+    function getListingState(uint _id) public view returns (uint) {
+        return uint256(listings[_id].state);
     }
 }

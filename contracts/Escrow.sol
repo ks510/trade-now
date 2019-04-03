@@ -118,6 +118,14 @@ contract Escrow {
     }
 
     /**
+    * @dev Return the list of all transaction ids involving the given account
+    * @param _user The account address to retrieve all transactions for
+    */
+    function getAllUserTransactions(address _user) public view returns (uint256[] memory) {
+        return allUserTransactions[_user];
+    }
+
+    /**
     * @dev Return the current status of the given transaction id
     * @param _id Transaction id to retrieve status of
     */
@@ -125,12 +133,16 @@ contract Escrow {
         return uint(transactions[_id].status);
     }
 
-    /**
-    * @dev Return the list of all transaction ids involving the given account
-    * @param _user The account address to retrieve all transactions for
-    */
-    function getAllUserTransactions(address _user) public view returns (uint256[] memory) {
-        return allUserTransactions[_user];
+    function getTransactionBuyer(uint _id) public {
+      return transactions[_id].buyer;
+    }
+
+    function getTransactionSeller(uint _id) public {
+      return transactions[_id].seller;
+    }
+
+    function getTransactionAmount(uint _id) public {
+      return transactions[_id].amount;
     }
 
     // release payment to seller of the transaction

@@ -31,38 +31,60 @@ contract Market {
     uint state
   );
 
-  // get contracts that store state at deployed addresses
+  /**
+  * @dev Constructor initialises instances of low-level storage contracts for
+  * this proxy contract.
+  */
   constructor(address _marketStore, address _escrow) public {
     marketStore = MarketStore(_marketStore);
     escrow = Escrow(_escrow);
   }
 
-  function createListing(uint _price, string memory _title, string memory _desc)
+  /**
+  * @dev Create a new listing in the marketplace and notifies client with the
+  * new listing id through event. Sender of this function is assumed to be the
+  * seller of the listing.
+  * @param _price The selling price of listing
+  * @param _title The string title of the listing and item for sale
+  * @param _desc The string description of the listing
+  */
+  function createListing(
+    uint _price,
+    string memory _title,
+    string memory _desc
+  )
     public
   {
-    // create transaction in market store, seller is the sender of call
     uint listingId = marketStore.createListingInStore(_price, _title, _desc, msg.sender);
-    // notify client the listing was succesfully created with the id of the listing
+
     emit ListingCreated(listingId);
   }
 
+  /**
+  * @dev Returns all information about a listing through through an event.
+  * @param _id The id of listing to retrieve
+  */
   function retrieveListing(uint _id) public {
     uint listingId;
     uint price;
     string memory title;
     string memory desc;
+    string memory image;
     address seller;
     uint state;
-    (listingId, price, title, desc, seller, state) = marketStore.getListing(_id);
+    (listingId, price, title, desc, image, seller, state) = marketStore.getListing(_id);
     emit Listing(listingId, price, title, desc, seller, state);
   }
 
+  /**
+  * @dev Sender of this function purchases the given listing and sends the
+  * correct amount of funds to be held in escrow. This function assumes the
+  * correct amount of funds are sent and the listing exists.
+  * @param _listingId The listing id to purchase with funds
+  */
   function buyListing(uint _listingId) public payable {
-    uint price;
-    address seller;
-    (,price,,,seller,) = marketStore.getListing(_listingId);
-    // check listing exists and is AVAILABLE to purchase
-    // check buyer has sent sufficient funds
+    uint price = marketStore.getListingPrice(_listingId);
+    address seller = marketStore.getListingSeller(_listingId);
     // start transaction
     escrow.startTransaction(_listingId, msg.sender, seller, price);
     // send buyer funds to transaction
@@ -72,11 +94,19 @@ contract Market {
     //_listingSold(_listingId);
   }
 
+  /**
+  * @dev Updates a transaction to confirmed status, triggering release of
+  * buyer's purchase funds to the seller
+  * @param _listingId The id of listing to update
+  */
   function confirmItemReceived(uint _listingId) public {
     // check listing exists
     // confirm transaction item received and release funds to buyer
   }
 
+  /**
+  * @dev
+  */
   function _validateBuyerFunds(uint _listingId, uint _buyerSent) private returns (bool) {
     // check buyer send correct amount
     return false;
