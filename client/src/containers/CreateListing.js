@@ -11,7 +11,7 @@ import {
 } from "react-bootstrap";
 import LoaderButton from "../components/LoaderButton";
 import "./CreateListing.css";
-import ipfs from './ipfs';
+import ipfs from '../ipfs';
 
 class CreateListing extends Component {
   constructor(props) {
@@ -83,16 +83,38 @@ class CreateListing extends Component {
     );
   }
 
-  submitListing = (event) => {
+  submitListing = async (event) => {
     event.preventDefault();
     this.setState({ isLoading: true });
 
+    this.uploadFileToIPFS();
     // send transaction to contract to store new listing
+
+    // store IPFS hash in contract
+    const { accounts, contract } = this.props;
+    await contract.methods.set(this.state.imageIPFS).send({ from: accounts[0] });
+
+
   }
 
-  //TODO: verify fields not null
+  uploadFileToIPFS = async (event) => {
+    // post file to IPFS, get the IPFS hash and store it in contract
+    try {
+      let results = await ipfs.add(this.state.imageBuffer);
+      let ipfsHash = results[0].hash;
+      console.log(ipfsHash);
+      // store generated iPFS hash in state
+      this.setState({ imageIPFS: ipfsHash });
+      return true;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  }
 
   render() {
+    console.log(this.props.contract);
+    console.log(this.props.accounts);
     return (
       <div className="CreateListing">
         <h1>List an item!</h1>

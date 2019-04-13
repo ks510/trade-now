@@ -9,7 +9,15 @@ import SpinningLoader from "./components/SpinningLoader";
 import "./App.css";
 
 class App extends Component {
-  state = { storageValue: 0, web3: null, accounts: null, contract: null };
+  constructor(props) {
+    super(props);
+    this.state = {
+      storageValue: 0,
+      web3: null,
+      accounts: null,
+      contract: null
+    };
+  }
 
   componentDidMount = async () => {
     try {
@@ -61,7 +69,13 @@ class App extends Component {
     );
   }
 
-  renderLander() {
+renderLander() {
+    let childProps = {
+      accounts: this.state.accounts,
+      contract: this.state.contract,
+      test: "hello"
+    };
+
     return (
       <div className="App home">
         <Navbar fluid collapseOnSelect>
@@ -91,7 +105,7 @@ class App extends Component {
             </Nav>
           </Navbar.Collapse>
         </Navbar>
-        <Routes />
+        <Routes childProps={childProps} />
       </div>
     );
   }
@@ -106,6 +120,8 @@ class App extends Component {
       </div>
     );
   }
+
+
 }
 
 export default App;
