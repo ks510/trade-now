@@ -1,7 +1,11 @@
 import React, { Component } from "react";
 import SimpleStorageContract from "./contracts/SimpleStorage.json";
 import getWeb3 from "./utils/getWeb3";
-
+import { Link } from "react-router-dom";
+import { Nav, Navbar, NavItem } from "react-bootstrap";
+import Routes from "./Routes";
+import { LinkContainer } from "react-router-bootstrap";
+import SpinningLoader from "./components/SpinningLoader";
 import "./App.css";
 
 class App extends Component {
@@ -48,23 +52,57 @@ class App extends Component {
     this.setState({ storageValue: response });
   };
 
-  render() {
-    if (!this.state.web3) {
-      return <div>Loading Web3, accounts, and contract...</div>;
-    }
+  renderLoading() {
     return (
-      <div className="App">
-        <h1>Good to Go!</h1>
-        <p>Your Truffle Box is installed and ready.</p>
-        <h2>Smart Contract Example</h2>
-        <p>
-          If your contracts compiled and migrated successfully, below will show
-          a stored value of 5 (by default).
-        </p>
-        <p>
-          Try changing the value stored on <strong>line 40</strong> of App.js.
-        </p>
-        <div>The stored value is: {this.state.storageValue}</div>
+      <SpinningLoader
+        block
+        loadingText="Loading Web3, accounts, and contract..."
+      />
+    );
+  }
+
+  renderLander() {
+    return (
+      <div className="App home">
+        <Navbar fluid collapseOnSelect>
+          <Navbar.Header>
+            <Navbar.Brand>
+              <Link to="/">TradeNow</Link>
+            </Navbar.Brand>
+            <Navbar.Toggle />
+          </Navbar.Header>
+          <Navbar.Collapse>
+            <Nav pullRight>
+              <LinkContainer to="/createlisting">
+                <NavItem>Sell An Item</NavItem>
+              </LinkContainer>
+              <LinkContainer to="/marketplace">
+                <NavItem>Browse Marketplace</NavItem>
+              </LinkContainer>
+              <LinkContainer to="/mypurchases">
+                <NavItem>My Purchases</NavItem>
+              </LinkContainer>
+              <LinkContainer to="/mylistings">
+                <NavItem>My Listings</NavItem>
+              </LinkContainer>
+              <LinkContainer to="/help">
+                <NavItem>Help & FAQs</NavItem>
+              </LinkContainer>
+            </Nav>
+          </Navbar.Collapse>
+        </Navbar>
+        <Routes />
+      </div>
+    );
+  }
+
+  render() {
+    return (
+      <div className="App container">
+        {!this.state.web3
+          ? this.renderLoading()
+          : this.renderLander()
+        }
       </div>
     );
   }

@@ -1,0 +1,29 @@
+@media all and (min-width: 480px) {
+  .CreateListing {
+    padding: 20px 0;
+
+  }
+
+  .CreateListing form {
+    margin: 0 auto;
+    max-width: 600px;
+    color: ##3B4045;
+    padding-bottom: 50px;
+    text-align: left;
+  }
+
+  .CreateListing .listingPrice {
+    width: 50%;
+  }
+
+}
+
+.CreateListing form span.help-block {
+  font-size: 14px;
+  padding-bottom: 10px;
+  color: #999;
+}
+
+.CreateListing form p {
+  padding-bottom: 20px;
+}
