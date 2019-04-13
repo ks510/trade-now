@@ -20,6 +20,8 @@ contract Market {
   MarketStore marketStore;
   Escrow escrow;
 
+  event TotalListings(uint totalListings);
+
   event ListingCreated(uint id);
 
   event Listing(
@@ -51,11 +53,12 @@ contract Market {
   function createListing(
     uint _price,
     string memory _title,
-    string memory _desc
+    string memory _desc,
+    string memory _image
   )
     public
   {
-    uint listingId = marketStore.createListingInStore(_price, _title, _desc, msg.sender);
+    uint listingId = marketStore.createListingInStore(_price, _title, _desc, _image, msg.sender);
 
     emit ListingCreated(listingId);
   }
@@ -104,17 +107,15 @@ contract Market {
     // confirm transaction item received and release funds to buyer
   }
 
-  /**
-  * @dev
-  */
-  function _validateBuyerFunds(uint _listingId, uint _buyerSent) private returns (bool) {
-    // check buyer send correct amount
-    return false;
+  function getTotalListings() public {
+    uint total = marketStore.totalListings();
+    emit TotalListings(total);
   }
 
   // update listing state to sold
   function _listingSold(uint _id) private {
     marketStore.listingSold(_id);
   }
+
 
 }

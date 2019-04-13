@@ -162,7 +162,7 @@ contract MarketStore {
       return listings[_listingId].imageHash;
     }
 
-    function getListingPrice(uint _listingId) public view returns (address) {
+    function getListingSeller(uint _listingId) public view returns (address) {
       return listings[_listingId].seller;
     }
 

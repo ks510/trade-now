@@ -16,10 +16,10 @@ contract Escrow {
     enum Status {AWAITING_PAYMENT, AWAITING_DELIVERY, CONFIRMED}
 
     struct Transaction {
-      Status status;
-      address buyer;
-      address seller;
-      uint amount;
+        Status status;
+        address buyer;
+        address seller;
+        uint amount;
     }
 
     uint public transactionCount = 0;
@@ -133,15 +133,15 @@ contract Escrow {
         return uint(transactions[_id].status);
     }
 
-    function getTransactionBuyer(uint _id) public {
+    function getTransactionBuyer(uint _id) public view returns (address) {
       return transactions[_id].buyer;
     }
 
-    function getTransactionSeller(uint _id) public {
+    function getTransactionSeller(uint _id) public view returns (address) {
       return transactions[_id].seller;
     }
 
-    function getTransactionAmount(uint _id) public {
+    function getTransactionAmount(uint _id) public view returns (uint) {
       return transactions[_id].amount;
     }
 
