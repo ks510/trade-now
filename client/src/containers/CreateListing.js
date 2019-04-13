@@ -11,6 +11,7 @@ import {
 } from "react-bootstrap";
 import LoaderButton from "../components/LoaderButton";
 import "./CreateListing.css";
+import ipfs from './ipfs';
 
 class CreateListing extends Component {
   constructor(props) {
@@ -47,19 +48,29 @@ class CreateListing extends Component {
 
     const file = event.target.files[0]; // access file from user input
 
+    // check a file was actually uploaded
     if (file) {
-      // update preview state
-      this.setState({ preview: URL.createObjectURL(file) });
+      // check file size doesn't exceed limit
+      if (this.validateFileSize(file.size)) {
 
-      const reader = new window.FileReader();
-      reader.readAsArrayBuffer(file); // convert file to array for buffer
-      // after reader finishes, initialise buffer and store in component state
-      reader.onloadend = () => {
-        this.setState({ imageBuffer: Buffer(reader.result) });
+        // update preview state
+        this.setState({ preview: URL.createObjectURL(file) });
 
-        console.log('buffer', this.state.imageBuffer); // console should log uint8array...
+        const reader = new window.FileReader();
+        reader.readAsArrayBuffer(file); // convert file to array for buffer
+        // after reader finishes, initialise buffer and store in component state
+        reader.onloadend = () => {
+          this.setState({ imageBuffer: Buffer(reader.result) });
+
+          //console.log('buffer', this.state.imageBuffer); // console should log uint8array...
+        }
       }
     }
+  }
+
+  // check if file size is less than 5MB or some limit
+  validateFileSize = (size) => {
+    return size < 5000000;
   }
 
   validateForm = () => {
@@ -103,9 +114,11 @@ class CreateListing extends Component {
             <ControlLabel>Upload a photo of your item</ControlLabel>
             <FormControl
               type="file"
+              accept=".png,.jpg,.jpeg"
               onChange={this.captureFile}
-              help="Use a clear photograph of your item!"
             />
+            <FormControl.Feedback />
+            <HelpBlock>Use a clear photograph of your item! Only JPEG and PNG images are allowed.</HelpBlock>
             <Image src={this.state.preview} width={300} height={300} responsive />
           </FormGroup>
 
@@ -132,8 +145,10 @@ class CreateListing extends Component {
               onChange={this.handleChange}
               placeholder="Include more details about the item such as specification, measurements, condition etc."
             />
+            <FormControl.Feedback />
+            <HelpBlock>Minimum of 50 characters</HelpBlock>
           </FormGroup>
-          <FormGroup controlId="confirmDetails" validationState={this.state.confirmDetails}>
+          <FormGroup controlId="confirmDetails">
             <Checkbox
               id="confirmDetails"
               checked={this.state.confirmDetails}
