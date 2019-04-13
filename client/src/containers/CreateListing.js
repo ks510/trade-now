@@ -84,20 +84,32 @@ class CreateListing extends Component {
   }
 
   submitListing = async (event) => {
+    console.log("submitting listing...");
     event.preventDefault();
     this.setState({ isLoading: true });
 
-    this.uploadFileToIPFS();
+    await this.uploadFileToIPFS();
+
     // send transaction to contract to store new listing
-
-    // store IPFS hash in contract
     const { accounts, contract } = this.props;
-    await contract.methods.set(this.state.imageIPFS).send({ from: accounts[0] });
+    console.log(accounts[0]);
+    console.log(contract);
+    const result = await contract.methods.createListing(
+      this.state.listingPrice,
+      this.state.listingTitle,
+      this.state.listingDescription,
+      this.state.imageIPFS
+    ).send({ from: accounts[0] });
+    console.log(result.events);
 
+    //this.setState({ isLoading: false });
 
+    // go to listing success page
+    this.props.history.push("/createlistingsuccess");
   }
 
   uploadFileToIPFS = async (event) => {
+    console.log("uploading image to IPFS...");
     // post file to IPFS, get the IPFS hash and store it in contract
     try {
       let results = await ipfs.add(this.state.imageBuffer);
@@ -113,8 +125,6 @@ class CreateListing extends Component {
   }
 
   render() {
-    console.log(this.props.contract);
-    console.log(this.props.accounts);
     return (
       <div className="CreateListing">
         <h1>List an item!</h1>
