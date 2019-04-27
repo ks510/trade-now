@@ -58,13 +58,13 @@ class App extends Component {
 
 renderLander() {
     let childProps = {
+      web3: this.state.web3,
       accounts: this.state.accounts,
       contract: this.state.contract,
-      test: "hello"
     };
 
     return (
-      <div className="App home">
+      <div className="App">
         <Navbar fluid collapseOnSelect>
           <Navbar.Header>
             <Navbar.Brand>

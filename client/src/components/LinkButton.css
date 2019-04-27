@@ -1,0 +1,12 @@
+.LinkButton, .LinkButton:hover, .LinkButton:visited, .LinkButton:active {
+  max-width: 40%;
+  border-radius: 10px;
+  border: none;
+  color: #FFFFFF;
+  background-color: #56CA9C;
+  margin: 0 auto;
+}
+
+.LinkButton:disabled, .LinkButton:disabled:hover, .LinkButton:disabled:active {
+  background-color: #7EDCBE;
+}

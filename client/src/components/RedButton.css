@@ -1,0 +1,11 @@
+.RedButton, .RedButton:hover, .RedButton:visited, .RedButton:active {
+  max-width: 40%;
+  border-radius: 10px;
+  border: none;
+  color: #FFFFFF;
+  margin: 0 auto;
+}
+
+.RedButton:disabled, .RedButton:disabled:hover, .RedButton:disabled:active {
+  background-color: #7EDCBE;
+}

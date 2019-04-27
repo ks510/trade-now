@@ -56,8 +56,7 @@ contract TestEscrow {
         Escrow escrow = Escrow(DeployedAddresses.Escrow());
 
         uint id = 1;
-        address buyer = address(this);
-        escrow.fundTransaction(id, buyer);
+        escrow.fundTransaction(id);
 
         // check transaction status was updated to AWAITING_DELIVERY = 1
         uint status = escrow.getTransactionStatus(1);

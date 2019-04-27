@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import getWeb3 from "../utils/getWeb3";
 import {
   InputGroup,
   HelpBlock,
@@ -7,7 +6,8 @@ import {
   FormControl,
   ControlLabel,
   Checkbox,
-  Image
+  Image,
+  Label
 } from "react-bootstrap";
 import LoaderButton from "../components/LoaderButton";
 import "./CreateListing.css";
@@ -24,7 +24,9 @@ class CreateListing extends Component {
       imageBuffer: null,
       preview: null,
       confirmDetails: false,
-      isLoading: false
+      isLoading: false,
+      titleCharLimit: 70,
+      wei: 0,
     };
   }
 
@@ -76,48 +78,67 @@ class CreateListing extends Component {
   validateForm = () => {
     return (
       this.state.listingTitle.length > 0 &&
+      this.state.listingTitle.length <= this.state.titleCharLimit &&
       this.state.listingPrice > 0 &&
-      this.state.listingDescription.length > 50 && // at least 50 characters
+      this.isValidPrice(this.state.listingPrice) &&
+      this.state.listingDescription.length > 0 &&
       this.state.preview != null &&
-      this.state.confirmDetails == true
+      this.state.confirmDetails === true
     );
   }
 
+  // validate input string for price is either integer or decimal
+  isValidPrice = (input) => {
+    return !isNaN(parseFloat(input)) && isFinite(input);
+  }
+
+  convertToWei = (amount) => {
+    const { web3 } = this.props;
+    return web3.utils.toWei(amount, 'ether');
+  }
+
   submitListing = async (event) => {
-    console.log("submitting listing...");
     event.preventDefault();
     this.setState({ isLoading: true });
 
+    const { accounts, contract } = this.props;
+
+    // prepare metadata for listing to store in contract
+    // upload image and description to IPFS and get hashes
     await this.uploadFileToIPFS();
 
-    // send transaction to contract to store new listing
-    const { accounts, contract } = this.props;
-    console.log(accounts[0]);
-    console.log(contract);
-    const result = await contract.methods.createListing(
-      this.state.listingPrice,
-      this.state.listingTitle,
-      this.state.listingDescription,
-      this.state.imageIPFS
-    ).send({ from: accounts[0] });
-    console.log(result.events);
+    // convert decimal Ether price from user input to Wei
+    const weiPrice = await this.convertToWei(this.state.listingPrice);
 
-    //this.setState({ isLoading: false });
+    try {
+      // send transaction to contract to store new listing
+      await contract.methods.createListing(
+        weiPrice,
+        this.state.listingTitle,
+        this.state.listingDescription,
+        this.state.imageIPFS
+      ).send({ from: accounts[0] });
 
-    // go to listing success page
-    this.props.history.push("/createlistingsuccess");
+      // go to listing success page
+      this.props.history.push("/createlisting/success");
+    } catch (error) {
+      console.error(error);
+      this.setState({ isLoading: false });
+    }
+
+
   }
 
   uploadFileToIPFS = async (event) => {
-    console.log("uploading image to IPFS...");
     // post file to IPFS, get the IPFS hash and store it in contract
     try {
       let results = await ipfs.add(this.state.imageBuffer);
-      let ipfsHash = results[0].hash;
-      console.log(ipfsHash);
-      // store generated iPFS hash in state
-      this.setState({ imageIPFS: ipfsHash });
+      let imageIPFS = results[0].hash;
+
+      this.setState({ imageIPFS });
+
       return true;
+
     } catch (error) {
       console.error(error);
       return false;
@@ -131,42 +152,50 @@ class CreateListing extends Component {
         <p>Please enter the details of your listing below.</p>
 
         <form onSubmit={this.submitListing}>
-          <FormGroup controlId="listingTitle" bsSize="large">
+          <FormGroup controlId="listingTitle" bsSize="large"
+            validationState={this.state.listingTitle.length < this.state.titleCharLimit ? null : "error"}
+          >
             <ControlLabel>Title of your listing</ControlLabel>
             <FormControl
               autoFocus
               type="text"
-              value={this.state.title}
+              value={this.state.listingTitle}
               onChange={this.handleChange}
               placeholder="Please enter a title for your listing"
             />
+            <FormControl.Feedback />
+            <HelpBlock>{this.state.listingTitle.length} / {this.state.titleCharLimit} characters left</HelpBlock>
           </FormGroup>
 
           <FormGroup controlId="listingImage" bsSize="large">
             <ControlLabel>Upload a photo of your item</ControlLabel>
             <FormControl
               type="file"
-              accept=".png,.jpg,.jpeg"
+              accept=".png,.jpg"
               onChange={this.captureFile}
             />
             <FormControl.Feedback />
-            <HelpBlock>Use a clear photograph of your item! Only JPEG and PNG images are allowed.</HelpBlock>
+            <HelpBlock>Use a clear photograph of your item! Only JPG and PNG images are allowed.</HelpBlock>
             <Image src={this.state.preview} width={300} height={300} responsive />
           </FormGroup>
 
           <div className="listingPrice">
-          <FormGroup controlId="listingPrice" bsSize="large">
-            <ControlLabel>Selling Price</ControlLabel>
-            <InputGroup>
-              <FormControl
-                type="number"
-                value={this.state.price}
-                onChange={this.handleChange}
-                placeholder="Ether"
-              />
-              <InputGroup.Addon>ETH</InputGroup.Addon>
-            </InputGroup>
-          </FormGroup>
+            <FormGroup controlId="listingPrice" bsSize="large"
+              validationState={this.isValidPrice(this.state.listingPrice) ? null : "error"}>
+              <ControlLabel>Selling Price</ControlLabel>
+              <InputGroup>
+                <FormControl
+                  value={this.state.price}
+                  onChange={this.handleChange}
+                  placeholder="Ether"
+                />
+                <InputGroup.Addon>ETH</InputGroup.Addon>
+              </InputGroup>
+              {!this.isValidPrice(this.state.listingPrice)
+                ? <Label>Only integers and decimal numbers allowed!</Label>
+                : null
+              }
+            </FormGroup>
           </div>
 
           <FormGroup controlId="listingDescription">
@@ -176,9 +205,10 @@ class CreateListing extends Component {
               value={this.state.listingDescription}
               onChange={this.handleChange}
               placeholder="Include more details about the item such as specification, measurements, condition etc."
+              rows={10}
             />
             <FormControl.Feedback />
-            <HelpBlock>Minimum of 50 characters</HelpBlock>
+            <HelpBlock>Use plaintext only, HTML/CSS not supported.</HelpBlock>
           </FormGroup>
           <FormGroup controlId="confirmDetails">
             <Checkbox

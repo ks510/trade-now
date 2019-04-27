@@ -1,0 +1,18 @@
+.Listing {
+  padding-bottom: 50px;
+  padding: 20px 0;
+}
+
+.Listing .description {
+
+}
+
+.Listing .description textarea {
+  resize: none;
+  max-width: 70%;
+  margin: auto;
+}
+
+.Listing .Image img {
+  margin: 10px auto;
+}

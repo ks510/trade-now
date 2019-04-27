@@ -1,0 +1,21 @@
+.MyPurchases .purchases {
+  text-align: left;
+}
+
+.MyPurchases .purchases img {
+  float: left;
+  margin-right: 20px;
+}
+
+.MyPurchases .purchases .buttons {
+  margin-top: 10px;
+}
+
+.MyPurchases h1 {
+  background-color: #a5efc2;
+  padding: 20px 0;
+}
+
+.MyPurchases {
+
+}

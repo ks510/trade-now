@@ -1,0 +1,10 @@
+.PurchaseSuccess .tick.glyphicon {
+  margin-right: 7px;
+  top: 2px;
+  font-size: 150px;
+  color: green;
+}
+
+.PurchaseSuccess {
+  padding: 20px 0;
+}

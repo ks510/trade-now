@@ -1,0 +1,17 @@
+.MyListings .listings {
+  text-align: left;
+}
+
+.MyListings .listings img {
+  float: left;
+  margin-right: 20px;
+}
+
+.MyListings .listings .buttons {
+  margin-top: 10px;
+}
+
+.MyListings h1 {
+  background-color: #a5efc2;
+  padding: 20px 0;
+}

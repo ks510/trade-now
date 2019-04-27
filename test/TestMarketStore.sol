@@ -27,7 +27,7 @@ contract TestMarketStore {
         // create the listing in marketplace
         uint price = 100;
         string memory title = "Teddy Bear";
-        string memory desc = "Brand new soft toy with tags";
+        string memory desc = "Brand new soft toy with tags"; // this value should be ipfs hash
         string memory image = ""; // this value should be ipfs hash
         address seller = address(this); // this test contract is creating this listing
         uint generatedId = market.createListingInStore(price, title, desc, image, seller);
