@@ -12,6 +12,10 @@
 }
 
 .MyListings h1 {
-  background-color: #a5efc2;
+  background-color: #f0e2ff;
   padding: 20px 0;
+}
+
+.MyListings {
+  padding-bottom: 50px;
 }

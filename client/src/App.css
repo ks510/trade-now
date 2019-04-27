@@ -1,20 +1,16 @@
-.App {
-  margin-top: 15px;
-  text-align: center;
-}
-
-.App .navbar {
-  background-color: #ccffe0;
-}
-
-.App .navbar-brand {
-  font-weight: bold;
-  color: black;
-}
-
 .App .navbar-collapse {
   font-weight: bold;
   color: black;
+}
+
+.App .navbar-brand, .App .navbar-brand:hover, .App .navbar-brand:visited, .App .navbar-brand:active {
+  font-weight: bold;
+  color: black;
+}
+
+.App .navbar {
+  background-color: #88e0a8;
+  border: none;
 }
 
 .App-header {
@@ -25,4 +21,20 @@
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
+}
+
+.App .footer {
+  display: block;
+  background-color: #3d3d3d;
+  padding: 30px 0;
+  color: white;
+}
+
+.App .footer a {
+  color: white;
+}
+
+.App {
+  margin-top: 15px;
+  text-align: center;
 }

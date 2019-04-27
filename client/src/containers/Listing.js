@@ -99,7 +99,7 @@ export default class Listing extends Component {
   renderListing = () => {
     return (
       <div className="listingDetails">
-        <h2>{this.state.title}</h2>
+        <h1>{this.state.title}</h1>
         <div className="Image">
           <Image src={`https://ipfs.io/ipfs/${this.state.image}`} responsive />
         </div>
@@ -108,7 +108,6 @@ export default class Listing extends Component {
         <h4>Description:</h4>
         <div className="description">
           <FormControl
-            readOnly
             componentClass="textarea"
             value={this.state.description}
             rows={this.state.description.split("\n").length+1}

@@ -104,7 +104,7 @@ export default class MyListings extends Component {
         return "success";
       case "SOLD":
         return "danger";
-      case "DISBLED":
+      case "DISABLED":
         return "warning";
       default:
         return null;

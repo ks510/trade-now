@@ -2,7 +2,7 @@ pragma solidity ^0.5.0;
 
 /**
 * @author Karen Suen
-* @title Stores and manages the state of all listings in the marketplace.
+* @notice Stores and manages the state of all listings in the marketplace.
 * This is a low level storage contract that provides getters and setters for
 * creating, accessing and modifying listings. Currently, a reference is stored
 * for fetching the listing image from a distributed database due to the expensive
@@ -28,22 +28,23 @@ contract MarketStore {
     mapping(address => uint[]) public allUserListings;
 
     /**
-    * @dev Constructor initialises marketplace with 0 listings
+    * @notice Constructor initialises marketplace with no listings
     */
     constructor() public {
         totalListings = 0;
     }
 
     /**
-    * @notice Create a new listing in the marketplace and returns its generated id.
-    * Indexing of listings always starts at 1.
-    * @dev The unique ID of each listing is auto generated using the incremented
-    * total listing count. The list of seller's owned listings are also updated.
+    * @dev Create a new listing in the marketplace and returns its generated id.
+    * Indexing of listings always starts at 1. The unique ID of each listing is
+    * auto generated using the incremented total listing count. The list of
+    * seller's owned listings are also updated.
     * @param _price The selling price of the new listing in Wei
     * @param _title The title of the new listing
     * @param _desc The reference hash of listing description stored in a distributed database
     * @param _image The reference hash of listing image stored in a distributed database
     * @param _seller The seller address that created this listing (owner)
+    * @return Generated id of listing in the marketplace
     */
     function createListingInStore(
         uint _price,
@@ -74,8 +75,7 @@ contract MarketStore {
     }
 
     /**
-    * @notice Disable the given listing by updating its state to INACTIVE (2)
-    * @dev Sold or disabled listings could be activated again (relisted)
+    * @dev Disable the given listing by updating its status to INACTIVE
     * @param _id The id of listing to disable
     */
     function disableListing(uint _id) public {
@@ -83,7 +83,7 @@ contract MarketStore {
     }
 
     /**
-    * @notice Updates the given listing to SOLD state
+    * @dev Updates the given listing to SOLD status
     * @param _id The id of sold listing
     */
     function listingSold(uint _id) public {
@@ -91,7 +91,7 @@ contract MarketStore {
     }
 
     /**
-    * @dev Update the given listing to available state
+    * @dev Updates the given listing to AVAILABLE status
     * @param _id The id of listing to make available in marketplace
     */
     function listingAvailable(uint _id) public {
@@ -102,6 +102,8 @@ contract MarketStore {
     * @notice Returns all information about a listing in the marketplace as a tuple
     * @dev The listing state enum value is returned as an integer
     * @param _id The id of listing to return
+    * @return Listing id, price in Wei, title, description, image reference,
+    * seller address
     */
     function getListing(uint _id) public view returns (
         uint,
@@ -129,6 +131,7 @@ contract MarketStore {
     /**
     * @dev Returns a list of all listing id's created by an address (user)
     * @param _seller The address to retrieve all listing ids for
+    * @return A list of listing ids
     */
     function getAllSellerListings(address _seller) public view returns (uint[] memory) {
         return allUserListings[_seller];
@@ -138,6 +141,7 @@ contract MarketStore {
     * @dev Returns the selling price of a given listing in Wei (smallest
     * denomination of Ether)
     * @param _id The id of listing to retrieve selling price of
+    * @return Listing price in Wei
     */
     function getListingPrice(uint _id) public view returns (uint) {
       return listings[_id].price;
@@ -146,6 +150,7 @@ contract MarketStore {
     /**
     * @dev Returns the title of a given listing
     * @param _id The id of listing to retrieve title of
+    * @return Listing title
     */
     function getListingTitle(uint _id) public view returns (string memory) {
       return listings[_id].title;
@@ -154,6 +159,7 @@ contract MarketStore {
     /**
     * @dev Returns the description reference of a given listing
     * @param _id The id of listing to retrieve the description of
+    * @return Listing description
     */
     function getListingDescription(uint _id) public view returns (string memory) {
       return listings[_id].description;
@@ -162,14 +168,16 @@ contract MarketStore {
     /**
     * @dev Returns the image reference of a given listing
     * @param _id The id of listing to retrieve the image reference of
+    * @return Image reference
     */
     function getListingImage(uint _id) public view returns (string memory) {
       return listings[_id].imageHash;
     }
 
     /**
-    * @dev Returns the seller
+    * @dev Returns the seller of the listing
     * @param _id The id of listing to retrieve the state of
+    * @return Seller address
     */
     function getListingSeller(uint _id) public view returns (address) {
       return listings[_id].seller;
@@ -178,6 +186,7 @@ contract MarketStore {
     /**
     * @dev Returns the current state of a listing as an integer
     * @param _id The id of listing to retrieve the state of
+    * @return Listing status
     */
     function getListingState(uint _id) public view returns (uint) {
         return uint256(listings[_id].state);

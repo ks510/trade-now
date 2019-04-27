@@ -54,7 +54,6 @@ export default class Home extends Component {
 
   // only show the title, preview image and price for each listing
   renderListingsCol = (listings) => {
-    console.log(listings);
     return [{}].concat(listings).map(
       (listing, i) =>
         (i !== 0) && (listing[6] === "0")

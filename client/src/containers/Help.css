@@ -1,4 +1,16 @@
 .Help h1 {
-  background-color: #a5efc2;
+  background-color: #f0e2ff;
   padding: 20px 0;
+}
+
+.Help h2 {
+  padding: 10px 0;
+}
+
+.Help .contents {
+  text-align: left;
+}
+
+.Help {
+  padding-bottom: 60px;
 }

@@ -1,0 +1,11 @@
+{
+  "docs": {
+    "Proxy Contract": [
+      "Market"
+    ],
+    "Storage Contracts": [
+      "Escrow",
+      "MarketStore"
+    ]
+  }
+}

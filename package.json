@@ -1,0 +1,27 @@
+{
+  "name": "project-dapp2",
+  "version": "1.0.0",
+  "description": "decentralized marketplace",
+  "main": "truffle-config.js",
+  "directories": {
+    "doc": "docs",
+    "test": "test"
+  },
+  "dependencies": {
+    "solidity-docgen": "^0.1.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ks510/trade-now.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ks510/trade-now/issues"
+  },
+  "homepage": "https://github.com/ks510/trade-now#readme"
+}

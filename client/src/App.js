@@ -93,6 +93,18 @@ renderLander() {
           </Navbar.Collapse>
         </Navbar>
         <Routes childProps={childProps} />
+        <div className="footer">
+          <h5>Links</h5>
+          <a href="https://ks510.github.io/trade-now-docs">
+            Documentation & API
+          </a>
+          <br />
+          <a href="https://github.com/ks510/trade-now">
+            Source Code (Github)
+          </a>
+          <br />
+          <h5>Copyright © 2019 Karen Suen</h5>
+        </div>
       </div>
     );
   }
