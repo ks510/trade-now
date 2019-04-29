@@ -1,7 +1,7 @@
 # TradeNow
 A decentralized marketplace built on the Ethereum blockchain. Developed using the Truffle framework and uses IPFS via Infura for storing large data. This project is part of my final year project 2018/19 at University of Sussex.
 
-Author: Karen Suen
+Author: 164577
 
 ## Documentation
 Visit the docs site: https://ks510.github.io/trade-now-docs
